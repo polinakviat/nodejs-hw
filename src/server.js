@@ -33,8 +33,9 @@ app.get('/notes', (req, res) => {
   });
 });
 app.get('/notes/:noteId', (req, res) => {
+  const noteID = req.params.noteId;
   res.status(200).json({
-    "message": "Retrieved note with ID: id_param"
+    "message": `Retrieved note with ID: ${noteID}`
   });
 });
 
@@ -42,11 +43,6 @@ app.get('/test-error', () => {
   throw new Error('Simulated server error');
 });
 
-app.use((err, req, res, next) => {
-  res.status(404).json({
-    "message": "Route not found"
-  });
-});
 
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
@@ -56,6 +52,11 @@ app.use((err, req, res, next) => {
   });
 });
 
+app.use((req, res, next) => {
+  res.status(404).json({
+    "message": "Route not found"
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
