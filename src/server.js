@@ -2,12 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import 'dotenv/config';
+import { connectMongoDB } from './db/connectMongoDB.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+import { logger } from './middleware/logger.js';
+import { notesRouter } from './routes/notesRoutes.js';
 
-const PORT = process.env.PORT || 3000;
+
+
+const PORT = process.env.PORT ?? 3030;
 const app = express();
 
+app.use('/notes', notesRouter);
 app.use(cors());
 app.use(express.json());
+app.use(logger);
 app.use(
   pino({
     level: 'info',
@@ -23,6 +32,19 @@ app.use(
     },
   }),
 );
+
+const startServer = async () => {
+  try {
+    await connectMongoDB();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port $(PORT)`);
+    });
+  }
+  catch (error) {
+    console.error('Failed to start the server:', error.message);
+    process.exit(1);
+  }
+};
 
 
 app.get('/', (req, res) => {
@@ -59,7 +81,20 @@ app.use((req, res, next) => {
   });
 });
 
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+// підключення до MongoDB
+await connectMongoDB();
+
+// запуск сервера
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+startServer();
