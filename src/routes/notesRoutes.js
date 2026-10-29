@@ -18,5 +18,4 @@ router.patch('/:noteId', updateNote);
 
 export const notesRouter = router;
 
-
 export default router;
