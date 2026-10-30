@@ -13,9 +13,7 @@ import {
   noteIdParamSchema,
   updateNoteSchema,
 } from "../validations/notesValidation.js";
-
-// 1. Імпортуємо middleware
-import { authenticate } from "../middleware/authenticate.js";
+import { authenticate } from "../middleware/authentificate.js";
 
 const router = Router();
 
