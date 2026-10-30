@@ -30,6 +30,8 @@ const notesSchema = new Schema(
     timestamps: true
   }
 );
-export const Note = model('Note', notesSchema);
 
 notesSchema.index({ tag: 1, userId: 1 });
+
+export const Note = model('Note', notesSchema);
+

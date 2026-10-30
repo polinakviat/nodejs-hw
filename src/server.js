@@ -10,19 +10,19 @@ import authRoutes from './routes/authRoutes.js';
 import notesRoutes from './routes/notesRoutes.js';
 import cookieParser from "cookie-parser";
 
+const PORT = process.env.PORT ?? 3000;
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 app.use(logger);
+app.use(authRoutes);
+app.use(notesRoutes);
 app.use(errors());
 app.use(notFoundHandler);
 app.use(errorHandler);
-app.use(authRoutes);
-app.use(notesRoutes);
 
-const PORT = process.env.PORT ?? 3000;
 const startServer = async () => {
   try {
     await connectMongoDB();
@@ -34,5 +34,6 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
 
 startServer();
