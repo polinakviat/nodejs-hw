@@ -15,8 +15,8 @@ app.use(cors());
 app.use(express.json());
 app.use(logger);
 app.use(notesRouter);
-app.use(notFoundHandler);
 app.use(errors());
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 const startServer = async () => {
