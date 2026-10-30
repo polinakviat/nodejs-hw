@@ -1,6 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
-import { tags } from '../contacts/tags.js';
+import { tags } from '../constants/tags.js';
 
 // Кастомна функція валідації для MongoDB ObjectId
 const objectIdValidator = (value, helpers) => {
