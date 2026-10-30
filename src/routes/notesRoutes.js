@@ -9,7 +9,7 @@ import {
 } from "../controllers/notesController.js";
 import {
   createNoteSchema,
-  getNotesSchema,
+  getAllNotesSchema,
   noteIdParamSchema,
   updateNoteSchema,
 } from "../validations/notesValidation.js";
@@ -20,7 +20,7 @@ const router = Router();
 // 2. Додаємо middleware до всіх шляхів, що починаються з /notes
 router.use("/notes", authenticate);
 
-router.get("/notes", celebrate(getNotesSchema), getNotes);
+router.get("/notes", celebrate(getAllNotesSchema), getNotes);
 router.get("/notes/:noteId", celebrate(noteIdParamSchema), getNoteById);
 router.post("/notes", celebrate(createNoteSchema), createNote);
 router.delete("/notes/:noteId", celebrate(noteIdParamSchema), deleteNote);
