@@ -5,11 +5,13 @@ import createHttpError from 'http-errors';
 export const getNoteById = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const notes = await Note.findById(noteId);
-    if (!notes) {
+    const note = await Note.findById(noteId);
+
+    if (!note) {
       throw createHttpError(404, 'Note not found');
     }
-    res.status(200).json(notes);
+
+    res.status(200).json(note);
   } catch (error) {
     next(error);
   }
@@ -17,8 +19,8 @@ export const getNoteById = async (req, res, next) => {
 
 export const createNote = async (req, res, next) => {
   try {
-    const notes = await Note.create(req.body);
-    res.status(201).json(notes);
+    const note = await Note.create(req.body);
+    res.status(201).json(note);
   } catch (error) {
     next(error);
   }
@@ -27,16 +29,14 @@ export const createNote = async (req, res, next) => {
 export const deleteNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const notes = await Note.findOneAndDelete({
-      _id: noteId,
-    });
-    if (!notes) {
-      throw createHttpError(404, "Note not found");
+    const note = await Note.findByIdAndDelete(noteId);
 
+    if (!note) {
+      throw createHttpError(404, 'Note not found');
     }
-    res.status(200).json(notes);
-  }
-  catch (error) {
+
+    res.status(204).send();
+  } catch (error) {
     next(error);
   }
 };
@@ -44,16 +44,16 @@ export const deleteNote = async (req, res, next) => {
 export const updateNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const notes = await Note.findOneAndUpdate(
-      { _id: noteId },
-      req.body,
-      { returnDocument: "after" }
-    );
+    const note = await Note.findByIdAndUpdate(noteId, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-    if (!notes) {
-      throw createHttpError(404, "Note not found");
+    if (!note) {
+      throw createHttpError(404, 'Note not found');
     }
-    res.status(200).json(notes);
+
+    res.status(200).json(note);
   } catch (error) {
     next(error);
   }
@@ -64,23 +64,32 @@ export const getAllNotes = async (req, res, next) => {
     const {
       page = 1,
       perPage = 10,
-      tag,
+      title,
+      content,
       search,
+      tag,
       sortBy = 'createdAt',
       sortOrder = 'asc',
     } = req.query;
 
     const skip = (Number(page) - 1) * Number(perPage);
 
-    // Побудова запиту
-    const query = Note.find();
+    const notesQuery = Note.find();
 
     if (tag) {
-      query.where('tag').equals(tag);
+      notesQuery.where('tag').equals(tag);
+    }
+
+    if (title) {
+      notesQuery.where('title').equals(title);
+    }
+
+    if (content) {
+      notesQuery.where('content').equals(content);
     }
 
     if (search) {
-      query.where({
+      notesQuery.where({
         $or: [
           { title: { $regex: search, $options: 'i' } },
           { content: { $regex: search, $options: 'i' } },
@@ -88,16 +97,25 @@ export const getAllNotes = async (req, res, next) => {
       });
     }
 
-    // Виправлене сортування та пагінація
     const sortOptions = {};
     sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
 
-    const notes = await query
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(Number(perPage));
+    // Паралельне отримання кількості та масиву нотаток
+    const [totalItems, notes] = await Promise.all([
+      notesQuery.clone().countDocuments(),
+      notesQuery
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(Number(perPage)),
+    ]);
+
+    const totalPages = Math.ceil(totalItems / Number(perPage));
 
     res.status(200).json({
+      page: Number(page),
+      perPage: Number(perPage),
+      totalItems,
+      totalPages,
       notes,
     });
   } catch (error) {

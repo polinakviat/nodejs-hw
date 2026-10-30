@@ -22,31 +22,21 @@ export const createNoteSchema = Joi.object({
   tag: Joi.string().valid(...TAGS).optional(),
 });
 
-// Схема для валідації PATCH /notes/:noteId (параметри + тіло запиту)
+// Схема для валідації тіла запиту PATCH /notes/:noteId
 export const updateNoteSchema = Joi.object({
-  params: Joi.object({
-    noteId: Joi.custom(objectIdValidator, 'ObjectId validation').required(),
-  }),
-  body: Joi.object({
-    title: Joi.string().min(1).optional(),
-    content: Joi.string().allow('').optional(),
-    tag: Joi.string().valid(...TAGS).optional(),
-  }).min(1), // Перевірка, що тіло запиту не порожнє (хоча б одне поле присутнє)
-});
+  title: Joi.string().min(1).optional(),
+  content: Joi.string().allow('').optional(),
+  tag: Joi.string().valid(...TAGS).optional(),
+}).min(1); // Перевірка, що тіло запиту не порожнє
 
-
-export const getNoteSchema = {
+// Схема для валідації GET /notes (query параметри)
+export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
+    tag: Joi.string().valid(...TAGS).optional(),
+    search: Joi.string().allow('').optional(),
+    sortBy: Joi.string().valid('_id', 'title', 'createdAt', 'updatedAt', 'tag').optional(),
+    sortOrder: Joi.string().valid('asc', 'desc', '1', '-1').optional(),
   }),
 };
-
-export const getAllNotesSchema = Joi.object({
-  page: Joi.number().integer().min(1).default(1),
-  perPage: Joi.number().integer().min(5).max(20).default(10),
-  tag: Joi.string().valid(...TAGS).optional(),
-  search: Joi.string().allow('').optional(),
-  sortBy: Joi.string().valid('_id', 'title', 'createdAt', 'updatedAt', 'tag').default('createdAt'),
-  sortOrder: Joi.string().valid('asc', 'desc', '1', '-1').default('asc'),
-});

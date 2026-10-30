@@ -1,34 +1,24 @@
 import { Schema, model } from 'mongoose';
+import { TAGS } from '../constants/tags.js';
 
-const noteSchema = new Schema(
+const notesSchema = new Schema(
   {
     title: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     content: {
       type: String,
-      trim: true,
       default: '',
+      trim: true,
     },
     tag: {
       type: String,
-      enum:
-        [
-          'Work',
-          'Personal',
-          'Meeting',
-          'Shopping',
-          'Ideas',
-          'Travel',
-          'Finance',
-          'Health',
-          'Important',
-          'Todo'
-        ],
-      default: 'Todo'
-    }
+      enum: TAGS,
+      default: 'Todo',
+      index: true, // Додано індекс по полю tag
+    },
   },
   {
     timestamps: true,
@@ -36,4 +26,4 @@ const noteSchema = new Schema(
   },
 );
 
-export const Note = model('note', noteSchema);
+export const Note = model('note', notesSchema);
