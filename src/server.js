@@ -14,8 +14,8 @@ app.use(cors());
 app.use(express.json());
 app.use(logger);
 
-// Підключення роутера нотаток без префікса у server.js
-app.use('/notes', notesRouter);
+
+app.use(notesRouter);
 
 const startServer = async () => {
   try {
