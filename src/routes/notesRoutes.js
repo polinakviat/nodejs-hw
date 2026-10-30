@@ -13,7 +13,7 @@ import {
   noteIdParamSchema,
   updateNoteSchema,
 } from "../validations/notesValidation.js";
-import { authenticate } from "../middleware/authentificate.js";
+import { authenticate } from "../middleware/authenticate.js";
 
 const router = Router();
 
