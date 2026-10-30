@@ -1,31 +1,31 @@
 import { Router } from "express";
 import { celebrate } from "celebrate";
 import {
-  getStudents,
-  getStudentById,
-  createStudent,
-  deleteStudent,
-  updateStudent,
-} from "../controllers/studentsController.js";
+  getNotes,
+  getNoteById,
+  createNote,
+  deleteNote,
+  updateNote,
+} from "../controllers/notesController.js";
 import {
-  createStudentSchema,
-  getStudentsSchema,
-  studentIdParamSchema,
-  updateStudentSchema,
-} from "../validations/studentsValidation.js";
+  createNoteSchema,
+  getNotesSchema,
+  noteIdParamSchema,
+  updateNoteSchema,
+} from "../validations/notesValidation.js";
 
 // 1. Імпортуємо middleware
 import { authenticate } from "../middleware/authenticate.js";
 
 const router = Router();
 
-// 2. Додаємо middleware до всіх шляхів, що починаються з /students
-router.use("/students", authenticate);
+// 2. Додаємо middleware до всіх шляхів, що починаються з /notes
+router.use("/notes", authenticate);
 
-router.get("/students", celebrate(getStudentsSchema), getStudents);
-router.get("/students/:studentId", celebrate(studentIdParamSchema), getStudentById);
-router.post("/students", celebrate(createStudentSchema), createStudent);
-router.delete("/students/:studentId", celebrate(studentIdParamSchema), deleteStudent);
-router.patch("/students/:studentId", celebrate(updateStudentSchema), updateStudent);
+router.get("/notes", celebrate(getNotesSchema), getNotes);
+router.get("/notes/:noteId", celebrate(noteIdParamSchema), getNoteById);
+router.post("/notes", celebrate(createNoteSchema), createNote);
+router.delete("/notes/:noteId", celebrate(noteIdParamSchema), deleteNote);
+router.patch("/notes/:noteId", celebrate(updateNoteSchema), updateNote);
 
 export default router;

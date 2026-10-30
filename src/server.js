@@ -8,7 +8,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { logger } from './middleware/logger.js';
 import notesRouter from './routes/notesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import studentsRoutes from './routes/studentsRoutes.js';
+import notesRoutes from './routes/notesRoutes.js';
 import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT ?? 3000;
@@ -25,7 +25,7 @@ app.use(errors());
 app.use(notFoundHandler);
 app.use(errorHandler);
 app.use(authRoutes);
-app.use(studentsRoutes);
+app.use(notesRoutes);
 
 const startServer = async () => {
   try {
