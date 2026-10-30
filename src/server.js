@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import { errors } from "celebrate";
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
@@ -13,9 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(logger);
-
-
 app.use(notesRouter);
+app.use(notFoundHandler);
+app.use(errors());
+app.use(errorHandler);
 
 const startServer = async () => {
   try {
@@ -28,9 +30,5 @@ const startServer = async () => {
     process.exit(1);
   }
 };
-
-// Обробники не знайдених маршрутів та помилок (мають бути в самому кінці після всіх роутів)
-app.use(notFoundHandler);
-app.use(errorHandler);
 
 startServer();
