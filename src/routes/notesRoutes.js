@@ -10,9 +10,9 @@ import {
 import {
   createNoteSchema,
   getAllNotesSchema,
-  noteIdParamSchema,
   updateNoteSchema,
 } from "../validations/notesValidation.js";
+import { noteIdSchema as noteIdParamSchema } from "../validations/notesValidation.js";
 import { authenticate } from "../middleware/authenticate.js";
 
 const router = Router();
