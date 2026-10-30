@@ -16,10 +16,11 @@ import {
   getNoteSchema,
 } from '../validations/notesValidation.js';
 
-router.get('/notes', celebrate(getNoteSchema), getNotes);
-
 
 const router = Router();
+
+
+router.get('/notes', celebrate(getNoteSchema), getNotes);
 
 router.get('/notes', celebrate({ query: getAllNotesSchema }), getAllNotes);
 
