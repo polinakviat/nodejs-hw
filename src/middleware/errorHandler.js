@@ -6,3 +6,4 @@ export const errorHandler = (err, req, res, next) => {
     message: isProd ? "повідомлення про помилку" : err.message,
   });
 };
+
