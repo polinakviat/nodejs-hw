@@ -17,7 +17,6 @@ const notesSchema = new Schema(
       type: String,
       enum: TAGS,
       default: 'Todo',
-      index: true, // Додано індекс по полю tag
     },
   },
   {
@@ -26,4 +25,7 @@ const notesSchema = new Schema(
   },
 );
 
-export const Note = model('note', notesSchema);
+// Створення звичайного індексу для поля tag після визначення схеми
+notesSchema.index({ tag: 1 });
+
+export const Note = model('Note', notesSchema);

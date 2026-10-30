@@ -10,24 +10,33 @@ const objectIdValidator = (value, helpers) => {
   return value;
 };
 
-// Схема для валідації noteId в параметрах маршруту
-export const noteIdSchema = Joi.object({
-  noteId: Joi.custom(objectIdValidator, 'ObjectId validation').required(),
-});
+// Схема для валідації noteId в параметрах маршруту (згорнута з Segments.PARAMS)
+export const noteIdSchema = {
+  [Segments.PARAMS]: Joi.object({
+    noteId: Joi.custom(objectIdValidator, 'ObjectId validation').required(),
+  }),
+};
 
 // Схема для валідації POST /notes (тіло запиту)
-export const createNoteSchema = Joi.object({
-  title: Joi.string().min(1).required(),
-  content: Joi.string().allow('').optional(),
-  tag: Joi.string().valid(...TAGS).optional(),
-});
+export const createNoteSchema = {
+  [Segments.BODY]: Joi.object({
+    title: Joi.string().min(1).required(),
+    content: Joi.string().allow('').optional(),
+    tag: Joi.string().valid(...TAGS).optional(),
+  }),
+};
 
-// Схема для валідації тіла запиту PATCH /notes/:noteId
-export const updateNoteSchema = Joi.object({
-  title: Joi.string().min(1).optional(),
-  content: Joi.string().allow('').optional(),
-  tag: Joi.string().valid(...TAGS).optional(),
-}).min(1); // Перевірка, що тіло запиту не порожнє
+// Схема для валідації PATCH /notes/:noteId (містить і params, і body)
+export const updateNoteSchema = {
+  [Segments.PARAMS]: Joi.object({
+    noteId: Joi.custom(objectIdValidator, 'ObjectId validation').required(),
+  }),
+  [Segments.BODY]: Joi.object({
+    title: Joi.string().min(1).optional(),
+    content: Joi.string().allow('').optional(),
+    tag: Joi.string().valid(...TAGS).optional(),
+  }).min(1), // Перевірка, що тіло запиту не порожнє
+};
 
 // Схема для валідації GET /notes (query параметри)
 export const getAllNotesSchema = {
