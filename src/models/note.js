@@ -32,4 +32,4 @@ const notesSchema = new Schema(
 );
 export const Note = model('Note', notesSchema);
 
-notesSchema.index({ title: 1, content: 1, tag: 1 });
+notesSchema.index({ tag: 1, userId: 1 });
