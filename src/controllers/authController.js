@@ -4,7 +4,7 @@ import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
-import { sendEmail } from '../utils/sendEmail.js';
+import { sendEmail } from '../utils/sendMail.js';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
