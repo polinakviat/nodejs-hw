@@ -2,21 +2,14 @@ import { Schema, model } from 'mongoose';
 
 const userSchema = new Schema(
   {
-    username: {
+    username: { type: String, trim: true, required: false },
+    email: { type: String, unique: true, trim: true, required: true },
+    password: { type: String, required: true, maxlength: 8 },
+    avatar: {
       type: String,
-      trim: true
+      required: false,
+      default: "https://ac.goit.global/fullstack/react/default-avatar.jpg",
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true
-    },
-    password: {
-      type: String,
-      required: true,
-      maxlength: 8
-    }
   },
   {
     timestamps: true,
